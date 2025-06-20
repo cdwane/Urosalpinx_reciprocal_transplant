@@ -13,6 +13,7 @@
  
 library(dplyr)
  library(tidyr)
+  library(readr)
   library(readxl)
   library(lubridate)
   
@@ -294,7 +295,7 @@ growthdata=subset(growthdata,growthdata$m!="NA") # Remove any rows where there i
 ## Load Weight data -------------------------------------------------------------------------------------
 
 # Note: this script creates two versions of the dataset: one with only data from individuals included in the orginal subset of 48 individuals (described in the paper) excluding those which died, and the second including individuals which were added as extra replacement animals during the course of the experiment    
-# Only weightdata is used in the paper, preliminary analysis determined results do not differ significantly between the two datasets
+# Only "weightdata" is used in the paper, preliminary analysis determined results do not differ significantly between the two datasets, so for simplicity, data from the replacement snails was excluded
     
 {
 combined_RT1_weightdata <- read.csv("~/github/RT1-data-analysis/Rawdata/combined_RT1_weightdata.csv")
@@ -352,7 +353,7 @@ weightdata[72,17] <- 0.0519
   counts=table(weightdata$Snail_ID)
   weightdata <- weightdata[weightdata$Snail_ID %in% names(counts[counts >= 12]), ]
   
-  # This step excludes any individivuals which were not used at all of the 13 timepoints (i.e. excludes replacements, and the three individuals which were transferred between temperature treatments midway through the experiment)
+  # This step excludes any individuals which were not used at all of the 13 timepoints (i.e. excludes replacements, and the three individuals which were transferred between temperature treatments midway through the experiment)
   # However, it keeps three individuals where data was not collected at a single timepoint
 
   weightdata$Snail_ID=as.character(weightdata$Snail_ID)
