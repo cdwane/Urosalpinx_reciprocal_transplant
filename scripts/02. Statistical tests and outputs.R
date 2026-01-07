@@ -59,7 +59,6 @@ summary (model)
 
 # Summary table
 tab_df(tidy(Anova(model,type=3)), title = "Shell height", show.rownames = FALSE, show.type=FALSE,digits=3)
-r2(model)
 
 # Checks to see if other random effects structures were preferred (used in supplemental material)
 {
@@ -102,7 +101,6 @@ summary (model)
 
 # Summary table
 tab_df(tidy(Anova(model,type=3)), title = "Growth rate", show.rownames = FALSE, show.type=FALSE,digits=3)
-r2(model)
 
 # Checks to see if other random effects structures were preferred (used in supplemental material)
 
