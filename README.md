@@ -1,6 +1,6 @@
 # Urosalpinx_reciprocal_transplant
 
-Data and code to support manuscript submission "Adaptation to warm environments with a fast pace of life in a marine predatory snail". 
+Data and code to support Ecological Monographs manuscript: Dwane et al. 2026 "Adaptation to warm environments with a fast pace of life in a marine predatory snail". 
 -----
 Scripts folder contains the following R scripts:
 
