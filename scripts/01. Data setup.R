@@ -228,7 +228,6 @@ growthdata=subset(growthdata,growthdata$m!="NA") # Remove any rows where there i
 
   { consdata[151,25:26] <- NA # Individual 768A_320_17
     consdata[226,25:26] <- NA # NHNH419_317_94
-    consdata[157,27:31] <- NA # 443_300_2
     consdata[222, 26] <- NA # 416_317_10
     consdata[237, 24:26] <- NA # 433_310_93
     consdata[139,27:29] <- NA # NHGA762B_320_6

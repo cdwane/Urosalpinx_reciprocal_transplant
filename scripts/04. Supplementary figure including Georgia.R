@@ -1,7 +1,7 @@
-# This script reproduces plots contained in supplement 2
-# including the Goergia population which was excluded from our main statistical analysis
+# This script reproduces plots contained in Appendix S2: Supplemental Figures S1 and S2.
+# including the Goergia population which was excluded from our main statistical analysis. 
 
-# Script 01 needs to be run first to load the required data
+# Script 01 or 02 needs to be run first to load the required data
 
 
 # Load libraries and custom settings----

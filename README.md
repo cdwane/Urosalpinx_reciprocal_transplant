@@ -17,7 +17,9 @@ Contains code to reproduce all statistical tests in the manuscript, as well as r
 
  This script reproduces figures 2-4 in the manuscript. This Script requires either scripts 01 or 02 to be run first to load the processed data.
 
-# Script 04: Supplementary figure including Georgia:
+# Script 04: Supplementary figure including data from the Georgia population. These are presented in Appendix S2: Supplemental Figures S1 and S2
 
- This script uses versions of the processed datasheets containing data from the Goergia population, which was not included in the main analysis. It requires Script 01 to be run first to load the necessary processed data.
+# Script 05: Generates supplemental figure presenting length, weight and growth data faceted by sex. This is included in Appendix S2: Supplemental Figure S3.
+
+
 >>>>>>> 14083a9881e4277c59d353eaa8c15cc75ccbbea8

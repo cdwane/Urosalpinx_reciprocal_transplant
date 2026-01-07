@@ -1,7 +1,6 @@
+# Script 01 needs to be run first to provide required data
 
-# This script contains all the statistical tests from script 02, as well as ggplot code to make the figures.
-
-# Script 01 or 02 needs to be run first to provide required data
+# Version of script 03 from the pre-revised manuscript and preprint.
 
 # Load libraries and custom settings----
 {
@@ -117,7 +116,7 @@ labtempplot=ggplot(labtemps, aes(y = temp, x = time)) +
               span = 0.1,) +  theme_mine() +
   theme(strip.text.x = element_text(size = 12)) +
   theme(legend.position = "none") +
-  ylab("Temperature (°C)") +
+  ylab("Temperature (C)") +
   xlab(NULL) +
   facet_grid(cols = vars(pop),labeller = as_labeller(regime_names))+
   scale_colour_manual(values = group.colors)+
@@ -127,7 +126,7 @@ labtempplot=ggplot(labtemps, aes(y = temp, x = time)) +
         to = as.Date("2023-12-01"),
         by = "2 months"
       )),
-      limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+      limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
       labels = date_format("%b")
     )
 
@@ -137,8 +136,7 @@ labtempplot # Takes a while to load
 
 ### Shell size figure----
 
-model=glmmTMB(m ~ Treat*Pop*Measure*Sex+ (1|Snail_ID), REML = TRUE, data=sizedata, family=gaussian(link="identity"))
-
+model=glmmTMB(m ~ Treat*Pop*Measure+ (1|Snail_ID)+ (1|Sex)+ (1|Egg_tag), REML = TRUE, data=sizedata, family=gaussian(link="log"))
 
 {model_means=emmeans(model, list(pairwise ~ Pop|Treat|Measure), adjust = "tukey")
   model_means_cld <- cld(object = model_means,
@@ -159,11 +157,11 @@ growthsummary=merge(growthsummary,timesummary,by="Measure") #Recombine time data
 model_means_cld2=merge(model_means_cld,timesummary,by="Measure") #Recombine time data with summary growth data
 ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
   geom_point(data=growthsummary, aes(y=mean,x=time,colour=Pop),position = position_dodge(width=dodge),size=size)+
-  geom_text(data = model_means_cld2, aes(label=asterisks,x=time, y=(emmean)+1.5),size=4 )+
+  geom_text(data = model_means_cld2, aes(label=asterisks,x=time, y=exp(emmean)+1.5),size=4 )+
   geom_linerange(data = growthsummary, linetype="solid", aes(time, mean, ymin = mean - se, ymax = mean + se,colour=Pop),position = position_dodge(width=dodge),size=1)+
   geom_line(colour="black")+
   #geom_smooth(method="loess",se=FALSE, colour="black", span=0.4)+
-  scale_colour_manual(values = group.colors)+
+  
   facet_grid(cols = vars(Treat))+
   theme_mine()+
   ylab("Shell height (mm)")+
@@ -174,7 +172,7 @@ ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
       to = as.Date("2023-12-01"),
       by = "2 months"
     )),
-    limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+    limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
     labels = date_format("%b")
   )+
   xlab(NULL)
@@ -182,10 +180,11 @@ ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
 
 lengthplot
 
-
 ### Specific growth rate figure ----
 
-model=glmmTMB(pgrowth~ Treat*Pop*Measure*Sex+ (1|Snail_ID), REML = TRUE, data=growthdata, family=gaussian(link="identity"),dispformula = ~ Measure*Treat*Pop)
+growthdata$pgrowth2=growthdata$pgrowth
+growthdata$pgrowth2 <- ifelse(growthdata$pgrowth2 < 0, 0, growthdata$pgrowth2)
+model=glmmTMB(pgrowth2 ~ Treat*Pop*Measure+ (1|Snail_ID)+ (1|Sex)+ (1|Is_Replacement), REML = TRUE, data=growthdata, family=tweedie(link="log"),dispformula=~Measure*Treat)
 
 {model_means=emmeans(model, list(pairwise ~ Pop|Treat|Measure), adjust = "tukey")
   model_means_cld <- cld(object = model_means,
@@ -208,7 +207,7 @@ model_means_cld2=merge(model_means_cld,timesummary,by="Measure") #Recombine time
 ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
   geom_point(data=growthsummary, aes(y=mean,x=time,colour=Pop),position = position_dodge(width=dodge),size=size)+
   geom_linerange(data = growthsummary, linetype="solid", aes(time, mean, ymin = mean - se, ymax = mean + se,colour=Pop),position = position_dodge(width=dodge),size=1)+
-  geom_text(data = model_means_cld2, aes(label=asterisks,x=time, y=(emmean)+0.2),size=4 )+
+  geom_text(data = model_means_cld2, aes(label=asterisks,x=time, y=exp(emmean)+0.2),size=4 )+
   
   geom_line(colour="black")+
   #geom_smooth(method="loess",se=FALSE, colour="black", span=0.4)+
@@ -226,7 +225,7 @@ ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
       to = as.Date("2023-12-01"),
       by = "2 months"
     )),
-    limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+    limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
     labels = date_format("%b")
   )+
   facet_grid(cols = vars(Treat),labeller = as_labeller(regime_names))+
@@ -236,7 +235,7 @@ ggplot(data=growthsummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
 pgrowthplot
 
 ### Weight data figure----
-model=glmmTMB(Tissue_weight~ Treat*Pop*Month*Sex+ (1|Snail_ID), REML = TRUE, data=weightdata, family=Gamma(link="log"))
+model=glmmTMB(Tissue_weight~ Treat*Pop*Month+ (1|Snail_ID)+(1|Sex), REML = TRUE, data=weightdata, family=Gamma(link="log"))
 
 
 {model_means=emmeans(model, list(pairwise ~ Pop|Treat|Month), adjust = "tukey")
@@ -275,7 +274,7 @@ weightplot={
         to = as.Date("2023-12-01"),
         by = "2 months"
       )),
-      limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+      limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
       labels = date_format("%b")
     )+
     xlab(NULL)
@@ -351,7 +350,7 @@ consplot = ggplot(data=conssummary,aes(y=mean,x=time, linetype=Pop, shape=Pop))+
       to = as.Date("2023-12-01"),
       by = "2 months"
     )),
-    limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+    limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
     labels = date_format("%b")
   )+
   xlab(NULL)
@@ -391,7 +390,7 @@ reproplot=ggplot(data=reprosummary,aes(y=mean,x=time, linetype=Pop, shape=Pop,fi
       to = as.Date("2023-12-01"),
       by = "2 months"
     )),
-    limits = as.POSIXct(c("2022-08-01 00:00", "2023-12-10 16:00")),
+    limits = as.POSIXct(c("2022-08-01 12:00", "2023-12-10 16:00")),
     labels = date_format("%b")
   )+
   xlab(NULL)
@@ -506,29 +505,17 @@ hatchingsuccesplot=ggplot(data=hatchingsuccess,aes(y=Prop_Hatchling_success,x=(T
 ## Create Figure legend----
 
 {
-legend <- get_plot_component(lengthplot +
-                               scale_colour_manual(values = group.colors, labels = c("Low latitude", "High latitude")) +
-                               scale_shape_manual(values = c(16, 17), labels = c("Low latitude", "High latitude")) +
-                               scale_linetype_manual(values = c("solid", "dashed"), labels = c("Low latitude", "High latitude")) +
-                               theme(
-                                 legend.position = "bottom",
-                                 legend.box = "horizontal",
-                                 legend.title = element_text(size = 12),
-                                 legend.text = element_text(size = 12)
-                               ) +
-                               labs(colour = "Population", shape = "Population", linetype = "Population"), 'guide-box-bottom', return_all = TRUE)
+legend <- get_plot_component(lengthplot + theme(legend.position="bottom", legend.box="horiztonal", legend.title = element_text(size=12),legend.text = element_text(size=10)) +
+                               labs(
+                                 colour = "Population", shape="Population",linetype="Population"
+                               ), 'guide-box-bottom', return_all = TRUE)
 }
 
 ## Figure 2 ----
 
 fig2plot=cowplot::plot_grid(labtempplot,lengthplot,weightplot, ncol=1, align="v",hjust=-1, labels = c('A', 'B', 'C', 'D'))
 
-cowplot::plot_grid(legend,fig2plot,  nrow=2, labels = "Figure 2",  label_x = 0,
-                   label_y = 1,
-                   hjust = 0,
-                   vjust = 1,
-                   label_fontface = "plain",
-                   label_size = 10, rel_heights=c(0.02,1))
+cowplot::plot_grid(legend,fig2plot,  nrow=2, rel_heights=c(0.02,1))
 
 
 ## Figure 3 ----
@@ -543,18 +530,12 @@ fig3plot=cowplot::plot_grid(print(pgrowthplot),fig3plot,  nrow=2, rel_heights=c(
 cowplot::plot_grid(legend,fig3plot,  nrow=2, rel_heights=c(0.02,1))
 
 ## Figure 4----
+
 {
-  legend <- get_plot_component(hatchingsuccesplot +
-                                 scale_fill_manual(values = group.colors, labels = c("Low latitude", "High latitude")) +
-                                 scale_shape_manual(values = c(16, 17), labels = c("Low latitude", "High latitude")) +
-                                 scale_linetype_manual(values = c("solid", "dashed"), labels = c("Low latitude", "High latitude")) +
-                                 theme(
-                                   legend.position = "bottom",
-                                   legend.box = "horizontal",
-                                   legend.title = element_text(size = 12),
-                                   legend.text = element_text(size = 12)
-                                 ) +
-                                 labs(fill = "Population", shape = "Population", linetype = "Population"), 'guide-box-bottom', return_all = TRUE)
+  legend <- get_plot_component(hatchingsuccesplot + theme(legend.position="bottom", legend.box="horiztonal", legend.title = element_text(size=12),legend.text = element_text(size=10)) +
+                                 labs(
+                                   colour = "Population", shape="Population",linetype="Population"
+                                 ), 'guide-box-bottom', return_all = TRUE)
 }
 
 
