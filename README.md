@@ -12,7 +12,7 @@ Converts files in the raw_data folder into processed data used in scripts 02, 03
 
 # Script 02. Statistical tests and outputs: 
 
-Contains code to reproduce all statistical tests in the manuscript, as well as random effect model selection comparisons in Appendix S1 Table S2 and ANOVA outputs presented in Appendix S2 Table S1. This script ideally requires Script 01 to be run first to generate the processed data files, but alternatively can be run by manually loading the processed data from the "processed_data" folder using the hashed out code lines for each 
+Contains code to reproduce all statistical tests in the manuscript, as well as random effect model selection comparisons in Appendix S1 Table S2 and ANOVA outputs presented in Appendix S2 Table S1. Contains code to load the processed data automatically, but this step can be skipped if script 01. is run first. 
 
 # Script 03. Graphics script:
 

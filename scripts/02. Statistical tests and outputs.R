@@ -1,4 +1,6 @@
+#Contains code to reproduce all statistical tests in the manuscript, as well as random effect model selection comparisons in Appendix S1 Table S2 and ANOVA outputs presented in Appendix S2 Table S1.
 
+# Contains code to load the processed data automatically, but this step can be skipped if script 01. is run first.
 
 # Load required libraries------
 
