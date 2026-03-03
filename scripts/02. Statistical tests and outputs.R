@@ -330,7 +330,7 @@ hatchingsuccess$Population=as.factor(hatchingsuccess$Population) # Population (N
 
 model=glm(Prop_Hatchling_success ~ Treatment*Population, data=hatchingsuccess, family=quasibinomial(link = "identity"))
 
-tab_df(tidy(Anova(model,type=2)), title = "Hatching success", show.rownames = FALSE, show.type=FALSE,digits=3)
+tab_df(tidy(Anova(model,type=3)), title = "Hatching success", show.rownames = FALSE, show.type=FALSE,digits=3)
 
 # No interaction effect, therefore rerun without interaction term (equivelant to running a type-2 SS which is appropriate in the absence of significant interactions)
 
@@ -354,10 +354,12 @@ data_summary(reproendstats, varname="totalembryos", groupnames=c("Pop","Treat"))
 table(reproendstats$reproduced,reproendstats$Pop,reproendstats$Treat) 
 
 # Size at first reproduction
-data_summary(reproendstatsGeorgia, varname="firstrepro_size", groupnames=c("Pop","Treat"))
+data_summary(subset(reproendstatsGeorgia,reproendstatsGeorgia$reproduced=="Y"), varname="firstrepro_size", groupnames=c("Pop","Treat"))
+
+
 
 # Age at first reproduction
-table(reproendstats$reproduced,reproendstats$Pop,reproendstats$Treat) 
+data_summary(subset(reproendstatsGeorgia,reproendstatsGeorgia$reproduced=="Y"), varname="firstrepro_age", groupnames=c("Pop","Treat"))
 
 
 # Test whether the numbers that did vs. the numbers that didnt reproduce are different in the cold regime----------------------------------------------------------
